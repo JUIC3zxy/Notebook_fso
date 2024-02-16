@@ -29,7 +29,10 @@ const App = () => {
       id:notes.length+1
     }
 
-    setNotes(notes.concat(noteSchem))
+    
+    axios.post("http://localhost:3001/notes", noteSchem).then(res => {
+      setNotes(notes.concat(noteSchem));
+    })
     setNewNote('')
 
   };
