@@ -1,14 +1,10 @@
 import { useState } from "react";
-const Notes = (props) => {
+const Notes = ({note,toggleImportance}) => {
 
   return (
-    <div>
-      <ul>
-        {props.notes.map((note) => {
-          return <li key={note.id}>{note.content}</li>;
-        })}
-      </ul>
-    </div>
+
+    <li key={note.id}> {note.content} <button onClick={toggleImportance}>{note.important?'cancel':'mark'}</button></li>
+
   );
 };
 export default Notes;
