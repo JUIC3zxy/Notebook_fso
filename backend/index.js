@@ -1,61 +1,26 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
-
 const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
-let notes = [
-    {
-      id: 1,
-      content: "HTML is easy",
-      important: true
-    },
-    {
-      id: 2,
-      content: "Browser can execute only JavaScript",
-      important: false
-    },
-    {
-      id: 3,
-      content: "GET and POST are the most important methods of HTTP protocol",
-      important: true
-    }
-  ]
+const usersRouter = require('./controllers/users')
+const notesRouter=require('./controllers/notes')
+const loginRouter=require('./controllers/login')
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
+app.use('/api/users', usersRouter)
+app.use('/api/notes',notesRouter)
+app.use('/api/login',loginRouter)
+const mongoose = require('mongoose')
 
-app.get('/api/notes/',(request, response) => {
+const url =process.env.MONGODB_URI
+mongoose.connect(url)
+mongoose.set('strictQuery',false)
 
-    response.json(notes)
-})
 
-app.get('/api/notes/:id', (request, response) => {
-  const id=Number(request.params.id)
-  const note=notes.find(note => note.id===id)
 
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
-})
-
-app.post('/api/notes',(req,res)=>{
-  const note=req.body
-  console.log(note)
-  res.json(note)
-})
-
-app.delete('/api/notes/:id',(req,res)=>{
-  const id=Number(req.params.id)
-  notes=notes.filter(note=>note.id!==id)
-  res.status(204).end()
-})
-
-const PORT = 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
